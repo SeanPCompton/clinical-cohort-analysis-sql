@@ -61,3 +61,58 @@ parent_directory/
 - No raw data files are modified.
 - SQL scripts are organized to reflect the logical progression of the analysis.
 - Absolute paths (e.g. ~/...) are avoided so the project runs on any machine when both repos are cloned side-by-side.
+
+
+
+---
+
+# Initialization & Running the Project
+
+Follow these steps to initialize the environment and run the exploratory SQL.
+
+### 1. Clone both repositories into the same parent directory
+
+```bash
+git clone <YOUR_REPO_URL>
+git clone https://github.com/chop-analytics/analyst-take-home-task
+Both repositories must be siblings in the same parent directory for relative paths to resolve correctly.
+```
+
+### 2. Install Homebrew & DuckDB (macOS)
+If Homebrew is not installed:
+
+```bash
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+```
+```bash
+brew install duckdb
+```
+Verify:
+
+```bash
+duckdb --version
+```
+### 3. DuckDB installation (other platforms)
+
+If Homebrew is not available, DuckDB can be installed via:
+
+- Linux: package managers or prebuilt binaries  
+- Windows: DuckDB CLI binary or via WSL  
+
+See the official DuckDB installation guide:
+https://duckdb.org/docs/installation/
+
+
+### 4. Run exploratory SQL
+From the root of this repository:
+
+```bash
+duckdb
+```
+
+Then inside the DuckDB prompt:
+
+```text
+.read sql/00_explore_datasets.sql
+```
+This script loads the raw CSV files from the assignment repository and performs initial dataset inspection.
