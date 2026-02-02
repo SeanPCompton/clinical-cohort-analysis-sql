@@ -59,30 +59,30 @@ SELECT
 UNION ALL
 
 SELECT
-    'datasets/encounters.csv'                                    AS dataset
-    , (SELECT COUNT(*) FROM encounters)                          AS row_count
-    , (SELECT COUNT(*) FROM pragma_table_info('encounters'))     AS column_count
+    'datasets/encounters.csv'                                   AS dataset
+    , (SELECT COUNT(*) FROM encounters)                         AS row_count
+    , (SELECT COUNT(*) FROM pragma_table_info('encounters'))    AS column_count
 
 UNION ALL
 
 SELECT
-    'datasets/medications.csv'                                    AS dataset
-    , (SELECT COUNT(*) FROM medications)                          AS row_count
-    , (SELECT COUNT(*) FROM pragma_table_info('medications'))     AS column_count
+    'datasets/medications.csv'                                  AS dataset
+    , (SELECT COUNT(*) FROM medications)                        AS row_count
+    , (SELECT COUNT(*) FROM pragma_table_info('medications'))   AS column_count
 
 UNION ALL
 
 SELECT
-    'datasets/patients.csv'                                    AS dataset
-    , (SELECT COUNT(*) FROM patients)                          AS row_count
-    , (SELECT COUNT(*) FROM pragma_table_info('patients'))     AS column_count
+    'datasets/patients.csv'                                     AS dataset
+    , (SELECT COUNT(*) FROM patients)                           AS row_count
+    , (SELECT COUNT(*) FROM pragma_table_info('patients'))      AS column_count
 
 UNION ALL
 
 SELECT
-    'datasets/procedures.csv'                                    AS dataset
-    , (SELECT COUNT(*) FROM procedures)                          AS row_count
-    , (SELECT COUNT(*) FROM pragma_table_info('procedures'))     AS column_count
+    'datasets/procedures.csv'                                   AS dataset
+    , (SELECT COUNT(*) FROM procedures)                         AS row_count
+    , (SELECT COUNT(*) FROM pragma_table_info('procedures'))    AS column_count
 ;
 
 -- --------------------------------------------------------------------
@@ -94,4 +94,3 @@ SELECT * FROM encounters LIMIT 10;
 SELECT * FROM medications LIMIT 10;
 SELECT * FROM patients LIMIT 10;
 SELECT * FROM procedures LIMIT 10;
-
