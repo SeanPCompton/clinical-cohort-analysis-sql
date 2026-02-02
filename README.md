@@ -36,11 +36,22 @@ The analysis follows a clear, reproducible workflow:
 
 ## Repository Structure
 
-- `datasets/` — Raw input CSV files (unchanged)
-- `docs/` — Data dictionary files corresponding to each dataset
-- `sql/` — SQL scripts organized by analysis stage
-- `output/` — Final exported CSV file
-- `README.md` — Project overview and execution notes
+This repository intentionally does **not** include the raw datasets.
+
+It assumes the original assignment repository is cloned locally and placed as a **sibling directory** to this repository so that all SQL/scripts can reference source files using **relative paths** (portable; no `~/...` absolute paths).
+
+Example layout:
+```text
+parent_directory/
+├── chop-analytics-exercise/        # this repository
+│   ├── sql/
+│   ├── output/
+│   └── README.md
+└── analyst-take-home-task/         # provided assignment repository
+    ├── datasets/
+    │   └── *.csv
+    └── data-dictionary.xlsx
+```
 
 ---
 
@@ -49,3 +60,4 @@ The analysis follows a clear, reproducible workflow:
 - All logic is written to be rerunnable from the raw CSV inputs.
 - No raw data files are modified.
 - SQL scripts are organized to reflect the logical progression of the analysis.
+- Absolute paths (e.g. ~/...) are avoided so the project runs on any machine when both repos are cloned side-by-side.
