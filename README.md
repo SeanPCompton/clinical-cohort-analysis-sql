@@ -2,11 +2,11 @@
 
 ## Project Overview
 
-This repository contains a take-home data exercise focused on cohort construction and metric derivation using healthcare encounter data.
+This project implements an end-to-end cohort construction pipeline using healthcare encounter data, with a focus on producing a clean, analysis-ready dataset suitable for downstream reporting or modeling.
 
-The objective is to identify hospital encounters for drug overdose, apply eligibility criteria to define a study cohort, and calculate a set of encounter-level indicators related to medication exposure, mortality, and readmissions. The final deliverable is a flat, analysis-ready dataset exported as a CSV file.
+The workflow identifies hospital encounters associated with drug overdose, applies clinically relevant eligibility criteria, and derives encounter-level indicators related to medication exposure, in-hospital mortality, and short-term readmissions. The result is a single, well-defined cohort table exported as a flat CSV for reuse across analytical tools.
 
-The project is implemented using **SQL with DuckDB**, operating directly on the provided CSV files.
+The solution is implemented entirely in **SQL using DuckDB**, operating directly on raw CSV inputs without requiring an external database or ETL framework. The project emphasizes transparent logic, reproducibility, and portability.
 
 
 
