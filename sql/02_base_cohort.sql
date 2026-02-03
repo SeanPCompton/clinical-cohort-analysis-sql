@@ -38,95 +38,95 @@
 
 CREATE OR REPLACE TEMP VIEW encounters AS
 SELECT
-	"PATIENT" AS patient
-	,"Id" AS id
-	,CAST(TRY_CAST(NULLIF("START", 'NA') AS TIMESTAMP) AS DATE) AS start
-	,CAST(TRY_CAST(NULLIF("STOP",  'NA') AS TIMESTAMP) AS DATE) AS stop
-	,"REASONDESCRIPTION" AS reasondescription
+    "PATIENT" AS patient
+    ,"Id" AS id
+    ,CAST(TRY_CAST(NULLIF("START", 'NA') AS TIMESTAMP) AS DATE) AS start
+    ,CAST(TRY_CAST(NULLIF("STOP",  'NA') AS TIMESTAMP) AS DATE) AS stop
+    ,"REASONDESCRIPTION" AS reasondescription
 FROM read_csv(
-	'../analyst-take-home-task/datasets/encounters.csv'
-	,ALL_VARCHAR = true
+    '../analyst-take-home-task/datasets/encounters.csv'
+    ,ALL_VARCHAR = true
 );
 
 CREATE OR REPLACE TEMP VIEW medications AS
 WITH medications_src AS (
-	SELECT *
-	FROM read_csv_auto(
-		'../analyst-take-home-task/datasets/medications.csv'
-		,SAMPLE_SIZE = -1
-		,NULLSTR = 'NA'
-		,types = {
-			'CODE':'VARCHAR'
-		}
-	)
+    SELECT *
+    FROM read_csv_auto(
+        '../analyst-take-home-task/datasets/medications.csv'
+        ,SAMPLE_SIZE = -1
+        ,NULLSTR = 'NA'
+        ,types = {
+            'CODE':'VARCHAR'
+        }
+    )
 )
 , medications_deduped AS (
-	SELECT DISTINCT
-		"PATIENT" AS patient
-		,"ENCOUNTER" AS encounter
-		,"CODE" AS code
-		,"DESCRIPTION" AS description
-		,TRY_CAST("START" AS DATE) AS start
-		,TRY_CAST("STOP"  AS DATE) AS stop
-	FROM medications_src
+    SELECT DISTINCT
+        "PATIENT" AS patient
+        ,"ENCOUNTER" AS encounter
+        ,"CODE" AS code
+        ,"DESCRIPTION" AS description
+        ,TRY_CAST("START" AS DATE) AS start
+        ,TRY_CAST("STOP"  AS DATE) AS stop
+    FROM medications_src
 )
 SELECT
-	patient
-	,encounter
-	,code
-	,description
-	,start
-	,stop
+    patient
+    ,encounter
+    ,code
+    ,description
+    ,start
+    ,stop
 FROM medications_deduped;
 
 
 CREATE OR REPLACE TEMP VIEW patients AS
 SELECT
-	id
-	,CAST(birthdate AS DATE) AS birthdate
-	,CAST(deathdate AS DATE) AS deathdate
-	-- other columns as-is
+    id
+    ,CAST(birthdate AS DATE) AS birthdate
+    ,CAST(deathdate AS DATE) AS deathdate
+    -- other columns as-is
 FROM read_csv_auto(
-	'../analyst-take-home-task/datasets/patients.csv'
-	,SAMPLE_SIZE = -1
-	,NULLSTR = 'NA'
+    '../analyst-take-home-task/datasets/patients.csv'
+    ,SAMPLE_SIZE = -1
+    ,NULLSTR = 'NA'
 );
 
 
 CREATE OR REPLACE TEMP VIEW base_cohort AS
 
 WITH qualifying_encounters AS (
-	SELECT
-	    encounters.patient AS patient_id
-	    ,encounters.id AS encounter_id
-	    ,encounters.start AS hospital_encounter_date
+    SELECT
+        encounters.patient AS patient_id
+        ,encounters.id AS encounter_id
+        ,encounters.start AS hospital_encounter_date
         ,encounters.stop AS encounter_end_date
-	FROM encounters
-	WHERE 1 = 1
-		AND encounters.reasondescription = 'Drug overdose'
-		AND encounters.start > DATE '1999-07-15'
+    FROM encounters
+    WHERE 1 = 1
+        AND encounters.reasondescription = 'Drug overdose'
+        AND encounters.start > DATE '1999-07-15'
 )
 
 ,cohort AS (
-	SELECT
-		qualifying_encounters.patient_id
-	    ,qualifying_encounters.encounter_id
-	    ,qualifying_encounters.hospital_encounter_date
+    SELECT
+        qualifying_encounters.patient_id
+        ,qualifying_encounters.encounter_id
+        ,qualifying_encounters.hospital_encounter_date
         ,qualifying_encounters.encounter_end_date
-	    ,DATE_DIFF(
+        ,DATE_DIFF(
             'year'
             , patients.birthdate
-	        ,qualifying_encounters.hospital_encounter_date
+            ,qualifying_encounters.hospital_encounter_date
             ) 
             AS age_at_visit
-	    ,patients.birthdate
+        ,patients.birthdate
         ,patients.deathdate
 
-	FROM qualifying_encounters
-	INNER JOIN patients
-		ON patients.id = qualifying_encounters.patient_id
-	WHERE 1 = 1
-		AND DATE_DIFF('year', patients.birthdate, qualifying_encounters.hospital_encounter_date) BETWEEN 18 AND 35
+    FROM qualifying_encounters
+    INNER JOIN patients
+        ON patients.id = qualifying_encounters.patient_id
+    WHERE 1 = 1
+        AND DATE_DIFF('year', patients.birthdate, qualifying_encounters.hospital_encounter_date) BETWEEN 18 AND 35
 )
 
 ,current_meds AS (
